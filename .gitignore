@@ -1,0 +1,40 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+
+# Model checkpoints and weight files
+*.pth
+*.ckpt
+
+# Dataset and data cache
+data/
+*.zip
+*.tar
+
+# Logs and training outputs
+logs/
+*.log
+user_avg_loss*
+
+# Images and visual outputs
+*.png
+*.jpg
+*.bmp
+
+# PDF or supplementary materials
+*.pdf
+
+# IDE and editor configs
+.vscode/
+
+# Java archive (in case of cross-language tool use)
+*.jar
+
+# Model code directory (ignored only if dynamically generated or cached)
+models/
+
+# Ignore built artifacts (optional, depending on project)
+build/
+dist/
+*.egg-info/
