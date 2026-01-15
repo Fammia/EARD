@@ -8,7 +8,6 @@ __pycache__/
 *.ckpt
 
 # Dataset and data cache
-data/
 *.zip
 *.tar
 
@@ -38,3 +37,6 @@ models/
 build/
 dist/
 *.egg-info/
+
+# macOS system files
+.DS_Store

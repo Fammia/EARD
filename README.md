@@ -1,161 +1,147 @@
-# EARD
+# From Entity Reliability to Clean Feedback: An Entity-Aware Denoising Framework Beyond Interaction-Level Signals
 
-This is the official PyTorch implementation for our paper (ID: 505).
+[![Conference](https://img.shields.io/badge/WWW-2026-brightgreen)](https://www2026.thewebconf.org/) [![Framework](https://img.shields.io/badge/PyTorch-v2.1.2-orange)](https://pytorch.org/) [![License](https://img.shields.io/badge/License-MIT-blue)](https://opensource.org/licenses/MIT)
 
------
+This repository contains the official PyTorch implementation of the paper **"From Entity Reliability to Clean Feedback: An Entity-Aware Denoising Framework Beyond Interaction-Level Signals"**, which has been accepted by **The Web Conference (WWW) 2026**.
 
-## Environment Setup
+## 📖 Abstract
 
-To get started, follow these simple steps to set up your environment.
+Implicit feedback in recommender systems is inherently noisy, containing false-positive interactions that degrade model performance. Existing denoising methods primarily focus on identifying noisy interactions based on individual loss values (interaction-level signals), often overlooking the intrinsic reliability of the entities (users and items) involved.
 
-1.  **Create a Conda environment**:
+**EARD (Entity-Aware Denoising)** is a novel framework that shifts the focus from interaction-level signals to **entity reliability**. By analyzing the loss distributions of users and items, EARD effectively distinguishes between hard-but-clean samples and noisy samples. The framework dynamically adjusts the importance of training samples through a multi-faceted weighting mechanism, leading to more robust and accurate recommendations.
 
-    ```bash
-    conda create -n EARD python=3.11
-    ```
+**Key Contributions:**
+*   **Entity-Centric Perspective**: We propose to evaluate noise through the lens of user and item reliability, moving beyond simple interaction-level loss filtering.
+*   **Adaptive Reweighting**: We introduce a dynamic reweighting strategy based on the Empirical Cumulative Distribution Function (ECDF) of losses to adaptively down-weight unreliable signals.
+*   **Model-Agnostic Design**: EARD is a general framework that can be seamlessly integrated with various collaborative filtering backbones (e.g., GMF, NeuMF, CDAE).
 
-2.  **Activate the environment**:
+## 🛠️ Environment Setup
 
-    ```bash
-    conda activate EARD
-    ```
+Please follow the steps below to set up the environment for reproducing our results.
 
-3.  **Install dependencies**:
+### 1. Create Conda Environment
+```bash
+conda create -n EARD python=3.11
+conda activate EARD
+```
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+### 2. Install Dependencies
+Ensure you have the required packages installed:
+```bash
+pip install -r requirements.txt
+```
 
------
+### Hardware Recommendations
+For optimal training performance, we recommend using a single **NVIDIA RTX 4090D GPU** (or equivalent).
 
-## Hardware Recommendations
+## 📂 Project Structure
 
-For optimal training performance, we recommend using a single **NVIDIA RTX 4090 GPU**.
-
------
-
-## Project Structure
-
-The project is organized into modules for each backbone model.
+The project is organized by backbone models to ensure modularity and ease of use.
 
 ```
 EARD/
-├── CDAE/
-│   ├── logs/                   # Training logs
-│   ├── models/                 # Saved model checkpoints
-│   ├── config.conf             # Configuration file for CDAE
-│   ├── data_utils.py           # Data preprocessing utilities
-│   ├── evaluate.py             # Evaluation script
-│   ├── main_CDAE.py            # CDAE training with EARD
-│   ├── main_CDAE_vanilla.py    # CDAE baseline training
-│   └── model.py                # CDAE model definition
+├── CDAE/                   # Implementation for CDAE backbone
+│   ├── logs/               # Training logs
+│   ├── models/             # Saved model checkpoints
+│   ├── config.conf         # Configuration file
+│   ├── data_utils.py       # Data loading and processing
+│   ├── evaluate.py         # Evaluation metrics (Recall, NDCG, etc.)
+│   ├── main_CDAE.py        # EARD training script for CDAE
+│   ├── main_CDAE_vanilla.py# Baseline training script
+│   └── model.py            # CDAE model architecture
 │
-├── NCF/
-│   ├── logs/                   # Training logs
-│   ├── models/                 # Saved model checkpoints
-│   ├── config.conf             # Configuration file for GMF/NeuMF
-│   ├── data_utils.py           # Data preprocessing utilities
-│   ├── evaluate.py             # Evaluation script
-│   ├── main.py                 # GMF/NeuMF training with EARD
-│   ├── main_vanilla.py         # GMF/NeuMF baseline training
-│   └── model.py                # GMF and NeuMF model definitions
+├── NCF/                    # Implementation for GMF and NeuMF backbones
+│   ├── logs/               # Training logs
+│   ├── models/             # Saved model checkpoints
+│   ├── config.conf         # Configuration file
+│   ├── data_utils.py       # Data loading and processing
+│   ├── evaluate.py         # Evaluation metrics
+│   ├── main.py             # EARD training script for GMF/NeuMF
+│   ├── main_vanilla.py     # Baseline training script
+│   └── model.py            # GMF/NeuMF model architectures
 │
-├── data/                       # Preprocessed datasets
+├── data/                   # Dataset directory
 │   ├── amazon_book/
-│   ├── movielens/
+│   ├── movielens/          # ML-1M dataset included
 │   └── yelp/
 │
-├── Hessian_valid.py            # Hyperparameter concavity analysis
-├── requirements.txt            # Python dependencies
-├── README.md                   # Project documentation
-└── .gitignore                  # Git exclusion rules
+├── Hessian_valid.py        # Script for hyperparameter concavity analysis
+├── requirements.txt        # Python dependencies
+└── README.md               # Project documentation
 ```
 
-> **Note:** The GMF and NeuMF models share the implementation in the `./NCF` directory, while CDAE has a separate implementation in `./CDAE` due to differences in data processing.
+## 🚀 Supported Models and Datasets
 
------
+### Models
+*   **GMF**: Generalized Matrix Factorization
+*   **NeuMF**: Neural Matrix Factorization
+*   **CDAE**: Collaborative Denoising Auto-Encoder
 
-## Supported Models and Datasets
+### Datasets  (Included in /data/)
+*   **ML-1M** (`movielens`): Movie ratings dataset.
+*   **Yelp** (`yelp`): Business reviews dataset.
+*   **Amazon-Book** (`amazon_book`): Book purchase dataset.
 
-### Models (Argument name)
+## ⚡ Getting Started
 
-  * GMF (`GMF`)
-  * NeuMF (`NeuMF-end`)
-  * CDAE
+### 1. Training GMF & NeuMF
+Navigate to the `NCF` directory:
+```bash
+cd NCF
+```
 
-### Datasets (Argument name)
+**Train with EARD:**
+To train a model (e.g., NeuMF) with the EARD framework, specify the model name, dataset, and entity weight bounds ($\alpha$ and $\beta$).
 
-  * ML-1M (`movielens`)
-  * Yelp (`yelp`)
-  * Amazon-Book (`amazon_book`)
+```bash
+# Example: Train NeuMF on ML-1M with alpha=0.5, beta=1.5
+python main.py --model NeuMF-end --dataset movielens --factor_lower 0.5 --factor_upper 1.5
+```
 
-> **Important**: Due to file size limitations for supplementary materials on OpenReview, we are only able to provide the ML-1M dataset in this repository.
+**Train Vanilla Baseline:**
+To train the original model without EARD denoising:
 
-### Key Hyperparameters
+```bash
+python main_vanilla.py --model NeuMF-end --dataset movielens
+```
 
-  * `factor_lower`: Corresponds to the lower bound of the entity weight ($\alpha$).
-  * `factor_upper`: Corresponds to the upper bound of the entity weight ($\beta$).
+### 2. Training CDAE
+Navigate to the `CDAE` directory:
+```bash
+cd CDAE
+```
 
------
+**Train with EARD:**
+```bash
+# Example: Train CDAE on ML-1M
+python main_CDAE.py --dataset movielens --factor_lower 0.5 --factor_upper 1.5
+```
 
-## Getting Started
+**Key Hyperparameters:**
+*   `--factor_lower`: Lower bound of the entity weight ($\alpha$).
+*   `--factor_upper`: Upper bound of the entity weight ($\beta$).
+*   `--dataset`: Dataset name (`movielens`, `yelp`, `amazon_book`).
+*   `--model`: Model name (only for NCF directory: `GMF`, `NeuMF-end`).
 
-### GMF & NeuMF
+## 📊 Reproducibility (RQ1 Experiments)
 
-1.  Navigate to the NCF directory:
+To reproduce the main results reported in the paper (RQ1), please use the following hyperparameter settings for $\alpha$ (`factor_lower`) and $\beta$ (`factor_upper`):
 
-    ```bash
-    cd ./NCF
-    ```
+| Model | ML-1M ($\alpha, \beta$) | Yelp ($\alpha, \beta$) | Amazon-Book ($\alpha, \beta$) |
+| :---- | :---------------------- | :--------------------- | :---------------------------- |
+| **GMF**   | [1.0, 2.0]              | [0.9, 1.0]             | [0.14, 0.4]                   |
+| **NeuMF** | [0.5, 1.5]              | [0.05, 0.1]            | [0.05, 0.1]                   |
+| **CDAE**  | [0.5, 1.5]              | [0.1, 0.5]             | [0.1, 0.5]                    |
 
-2.  **To train a model with EARD**, specify the model, dataset, and hyperparameters.
+## 📝 Citation
 
-    **Example**: Train **NeuMF** on **ML-1M** using $\alpha = 0.5$ and $\beta = 1.5$.
+If you find this code or our paper useful, please consider citing:
 
-    ```bash
-    python main.py --model NeuMF-end --dataset movielens --factor_lower 0.5 --factor_upper 1.5
-    ```
-
-    > You can also set these hyperparameters in `config.conf`. Note that command-line arguments override the values in `config.conf`.
-
-3.  **To train a vanilla baseline** (without EARD), use `main_vanilla.py`.
-
-    **Example**: Train the **NeuMF** vanilla baseline on **ML-1M**.
-
-    ```bash
-    python main_vanilla.py --model NeuMF-end --dataset movielens
-    ```
-
-    > The `factor_lower` and `factor_upper` arguments are not used in the vanilla training script.
-
------
-
-### CDAE
-
-1.  Navigate to the CDAE directory:
-
-    ```bash
-    cd ./CDAE
-    ```
-
-2.  **To train the CDAE model**, run `main_CDAE.py`.
-
-    **Example**: Train **CDAE** on **ML-1M**.
-
-    ```bash
-    python main_CDAE.py --dataset movielens
-    ```
-
-    > Hyperparameters $\alpha$ and $\beta$ can be configured using `--factor_lower` and `--factor_upper` as shown in the GMF/NeuMF examples.
-
------
-
-## Hyperparameters for RQ1 Experiments
-
-The following table shows the $\alpha$ and $\beta$ values used for our main experiments (RQ1) across each model and dataset.
-
-| Model | ML-1M       | Yelp        | Amazon-Book |
-| :---- | :---------- | :---------- | :---------- |
-| GMF   | \[1.0, 2.0] | \[0.9, 1.0] | \[0.14, 0.4] |
-| NeuMF | \[0.5, 1.5] | \[0.05, 0.1] | \[0.05, 0.1] |
-| CDAE  | \[0.5, 1.5] | \[0.1, 0.5] | \[0.1, 0.5] |
+```bibtex
+@article{liu2025entity,
+  title={From Entity Reliability to Clean Feedback: An Entity-Aware Denoising Framework Beyond Interaction-Level Signals},
+  author={Liu, Ze and Wang, Xianquan and Liu, Shuochen and Ma, Jie and Xu, Huibo and Han, Yupeng and Zhang, Kai and Zhou, Jun},
+  journal={arXiv preprint arXiv:2508.10851},
+  year={2025}
+}
+```
