@@ -22,7 +22,6 @@ user_avg_loss*
 *.bmp
 
 # PDF or supplementary materials
-*.pdf
 
 # IDE and editor configs
 .vscode/

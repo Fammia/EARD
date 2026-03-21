@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EARD – WWW 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=Syne+Mono&family=Instrument+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f6f3;
+    --surface: #ffffff;
+    --border: #e3e1dc;
+    --text: #14151a;
+    --body-text: #2b2e36;
+    --muted: #525660;
+    --accent: #2563eb;
+    --accent2: #c2410c;
+    --green: #047857;
+    --on-accent: #ffffff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Instrument Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 18px;
+    line-height: 1.75;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── NOISE TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity: 0.22;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative; z-index: 1;
+    padding: 5rem 2rem 3rem;
+    max-width: 900px; margin: 0 auto;
+    border-bottom: 1px solid var(--border);
+  }
+  .venue-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(37,99,235,0.08); border: 1px solid rgba(37,99,235,0.22);
+    color: #1d4ed8; border-radius: 100px;
+    font-family: 'Syne Mono', monospace; font-size: 13px; letter-spacing: 0.06em;
+    padding: 5px 15px; margin-bottom: 1.6rem;
+  }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700; line-height: 1.14;
+    max-width: 700px; margin-bottom: 0.5rem;
+    letter-spacing: -0.045em;
+  }
+  h1 .hi { color: var(--accent); }
+  h1 .hi2 { color: var(--accent2); }
+  .subtitle { font-size: 1.06rem; color: var(--muted); margin-bottom: 1.8rem; font-weight: 400; line-height: 1.55; }
+
+  .authors { display: flex; flex-wrap: wrap; gap: 0.3rem 1.2rem; margin-bottom: 0.5rem; font-size: 1.02rem; }
+  .authors a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border); transition: all 0.2s; font-weight: 500; }
+  .authors a:hover { color: var(--accent); border-color: var(--accent); }
+  .authors sup { font-size: 0.65rem; color: var(--accent2); font-weight: 600; }
+  .affil { font-size: 0.98rem; color: var(--muted); margin-bottom: 1.8rem; line-height: 1.55; }
+
+  .btn-row { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-family: 'Instrument Sans', sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 0.03em;
+    padding: 9px 20px; border-radius: 8px; text-decoration: none;
+    transition: all 0.18s; border: 1px solid;
+  }
+  .btn-primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); font-weight: 600; }
+  .btn-primary:hover { background: #1d4ed8; border-color: #1d4ed8; }
+  .btn-outline { background: transparent; color: var(--text); border-color: var(--border); }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── MAIN ── */
+  main { max-width: 900px; margin: 0 auto; padding: 0 2rem 6rem; position: relative; z-index: 1; }
+  section { margin-top: 4rem; }
+  h2 {
+    font-family: 'Syne Mono', monospace;
+    font-size: 15px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: #1d4ed8; margin-bottom: 1.4rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  h2::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  p { margin-bottom: 1rem; font-weight: 400; color: var(--body-text); line-height: 1.75; }
+  main p strong { font-weight: 600; color: var(--text); }
+
+  /* ── ABSTRACT ── */
+  .abstract-box {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 1.85rem 2rem;
+    box-shadow: 0 1px 3px rgba(20, 21, 26, 0.05);
+  }
+
+  /* ── CHALLENGES ── */
+  .challenge-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; }
+  @media(max-width:600px){ .challenge-grid{grid-template-columns:1fr;} }
+  .ccard {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 1.5rem 1.45rem; position: relative; overflow: hidden;
+    box-shadow: 0 1px 3px rgba(20, 21, 26, 0.05);
+  }
+  .ccard::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent2), transparent);
+  }
+  .ccard .cnum { font-family: 'Syne', sans-serif; font-size: 2.65rem; font-weight: 800; color: var(--border); line-height: 1; margin-bottom: 0.6rem; }
+  .ccard h3 { font-family: 'Syne', sans-serif; font-size: 0.98rem; font-weight: 700; margin-bottom: 0.45rem; color: var(--text); line-height: 1.35; }
+  .ccard p { font-size: 0.95rem; color: var(--body-text); margin: 0; line-height: 1.65; font-weight: 400; }
+
+  /* ── FRAMEWORK ── */
+  .framework {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 2rem; display: flex; gap: 0; align-items: stretch; overflow: hidden;
+    box-shadow: 0 1px 3px rgba(20, 21, 26, 0.05);
+  }
+  @media(max-width:640px){ .framework{flex-direction:column;} }
+  .fw-step {
+    flex: 1; padding: 1rem; text-align: center; border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  }
+  .fw-step:last-child { border-right: none; }
+  .fw-icon { font-size: 1.45rem; }
+  .fw-name { font-family: 'Syne', sans-serif; font-size: 0.92rem; font-weight: 700; color: var(--text); line-height: 1.3; }
+  .fw-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.55; font-weight: 400; }
+  .fw-arrow { display: flex; align-items: center; color: var(--border); font-size: 1.2rem; padding: 0 0.2rem; }
+
+  /* ── RESULTS ── */
+  section:has(.results-grid) > p:not(.results-note) {
+    font-weight: 500;
+    color: var(--body-text);
+    letter-spacing: 0.01em;
+  }
+  .results-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.1rem; margin-bottom: 1.35rem; }
+  @media(max-width:600px){ .results-grid{grid-template-columns:1fr;} }
+  .rcard {
+    background: linear-gradient(165deg, #f8f9fb 0%, #fff 55%);
+    border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.65rem 1.35rem 1.5rem; text-align: center; position: relative; overflow: hidden;
+    box-shadow: 0 1px 3px rgba(20, 21, 26, 0.06);
+  }
+  .rcard .rdataset {
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 0.88rem; font-weight: 600; letter-spacing: 0.02em;
+    color: #2d3138; margin-bottom: 0.65rem; line-height: 1.35;
+  }
+  .rcard .rscore {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.4rem; font-weight: 700; color: var(--text); line-height: 1.05;
+    font-variant-numeric: tabular-nums; letter-spacing: -0.03em;
+  }
+  .rcard .rgain {
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 600; color: var(--green); margin-top: 0.45rem; letter-spacing: 0.01em;
+  }
+  .rcard .rmetric {
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 0.82rem; color: #5a5e68; margin-top: 0.35rem; line-height: 1.4;
+  }
+  .results-note {
+    font-size: 0.96rem; color: var(--body-text); font-style: normal; font-weight: 400;
+    line-height: 1.68; letter-spacing: 0.01em;
+  }
+
+  /* ── EARD DESIGN ── */
+  .design-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media(max-width:600px){ .design-row{grid-template-columns:1fr;} }
+  .dcard {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 1.5rem 1.45rem;
+    box-shadow: 0 1px 3px rgba(20, 21, 26, 0.05);
+  }
+  .dcard h3 { font-family: 'Syne', sans-serif; font-size: 0.98rem; font-weight: 700; color: var(--accent); margin-bottom: 0.75rem; line-height: 1.35; }
+  .dcard p { font-size: 0.95rem; margin: 0; color: var(--body-text); line-height: 1.65; font-weight: 400; }
+
+  /* ── EFFICIENCY ── */
+  section:has(.eff-table) > p {
+    font-weight: 500;
+    color: var(--body-text);
+    letter-spacing: 0.01em;
+  }
+  .eff-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+  .eff-table th {
+    font-family: 'Instrument Sans', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.1em; color: #4a4d56; text-align: left;
+    padding: 0.75rem 0.9rem; border-bottom: 1px solid var(--border);
+  }
+  .eff-table td { padding: 0.75rem 0.9rem; border-bottom: 1px solid var(--border); color: var(--body-text); font-weight: 400; }
+  .eff-table tr:last-child td { border-bottom: none; }
+  .eff-table tr.ours td { color: var(--text); font-weight: 600; }
+  .eff-table .tag-good { color: var(--green); font-family: 'Instrument Sans', sans-serif; font-size: 12px; font-weight: 600; }
+  .eff-table .tag-bad { color: var(--accent2); font-family: 'Instrument Sans', sans-serif; font-size: 12px; font-weight: 600; }
+
+  /* ── BIB ── */
+  .bib-box {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 1.65rem; position: relative;
+    box-shadow: 0 1px 3px rgba(20, 21, 26, 0.05);
+  }
+  pre { font-family: 'Syne Mono', monospace; font-size: 13px; line-height: 1.85; white-space: pre-wrap; color: var(--body-text); font-weight: 400; }
+  pre .key { color: var(--accent); font-weight: 500; }
+  pre .val { color: var(--accent2); font-weight: 500; }
+  .copy-btn {
+    position: absolute; top: 1rem; right: 1rem;
+    font-family: 'Instrument Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+    padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px;
+    background: var(--surface); cursor: pointer; color: var(--muted); transition: all 0.15s;
+    text-transform: uppercase;
+  }
+  .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border); padding: 2rem;
+    text-align: center; font-size: 13px; color: var(--muted);
+    font-family: 'Instrument Sans', sans-serif; font-weight: 400; position: relative; z-index: 1;
+    line-height: 1.6;
+  }
+  footer a { color: var(--accent); text-decoration: none; font-weight: 500; }
+  footer a:hover { text-decoration: underline; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  header { animation: fadeUp 0.5s ease both; }
+  main section { animation: fadeUp 0.5s ease both; }
+  main section:nth-child(1){animation-delay:0.05s}
+  main section:nth-child(2){animation-delay:0.1s}
+  main section:nth-child(3){animation-delay:0.15s}
+  main section:nth-child(4){animation-delay:0.2s}
+  main section:nth-child(5){animation-delay:0.25s}
+  main section:nth-child(6){animation-delay:0.3s}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="venue-pill"><span class="dot"></span>WWW 2026 &nbsp;·&nbsp; Dubai, UAE &nbsp;·&nbsp; April 13–17</div>
+  <h1>From <span class="hi">Entity Reliability</span><br>to <span class="hi2">Clean Feedback</span></h1>
+  <p class="subtitle">An Entity-Aware Denoising Framework Beyond Interaction-Level Signals &nbsp;(EARD)</p>
+  <div class="authors">
+    <span><a href="#">Ze Liu</a></span>
+    <span><a href="#">Xianquan Wang</a></span>
+    <span><a href="#">Shuochen Liu</a></span>
+    <span><a href="#">Jie Ma</a></span>
+    <span><a href="#">Huibo Xu</a></span>
+    <span><a href="#">Yupeng Han</a></span>
+    <span><a href="#">Kai Zhang</a><sup>†</sup></span>
+    <span><a href="#">Jun Zhou</a><sup>†</sup></span>
+  </div>
+  <p class="affil">University of Science and Technology of China &nbsp;·&nbsp; Zhejiang University &nbsp;&nbsp; <sup>†</sup>Corresponding Authors</p>
+  <div class="btn-row">
+    <a class="btn btn-primary" href="www2026.pdf" target="_blank">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Paper (PDF)
+    </a>
+    <a class="btn btn-outline" href="https://github.com/Fammia/EARD" target="_blank">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      Code (GitHub)
+    </a>
+  </div>
+</header>
+
+<main>
+
+  <!-- ABSTRACT -->
+  <section>
+    <h2>Abstract</h2>
+    <div class="abstract-box">
+      <p>Implicit feedback is central to modern recommender systems but is inherently noisy, often impairing model training and degrading user experience. Existing denoising strategies typically overlook the <strong>entity-specific nature of noise</strong> while introducing high computational costs and complex hyperparameter tuning.</p>
+      <p style="margin:0">We propose <strong>EARD (Entity-Aware Reliability-Driven Denoising)</strong>, a lightweight framework that shifts the focus from interaction-level signals to entity-level reliability. EARD quantifies user and item reliability via their average training losses and integrates these with interaction-level confidence. The framework is model-agnostic, computationally efficient, and requires only <strong>two intuitive hyperparameters</strong>.</p>
+    </div>
+  </section>
+
+  <!-- CHALLENGES -->
+  <section>
+    <h2>Three Challenges We Address</h2>
+    <div class="challenge-grid">
+      <div class="ccard">
+        <div class="cnum">01</div>
+        <h3>No Entity-Aware Modeling</h3>
+        <p>Existing methods analyze noise only at interaction level, ignoring that noise originates from specific users ("wanderers") or items ("clickbait").</p>
+      </div>
+      <div class="ccard">
+        <div class="cnum">02</div>
+        <h3>High Computational Cost</h3>
+        <p>Methods like DeCA and BOD require up to 3× more GPU memory via meta-learning or bi-level optimization — impractical at industrial scale.</p>
+      </div>
+      <div class="ccard">
+        <div class="cnum">03</div>
+        <h3>Excessive Hyperparameters</h3>
+        <p>DeCA needs 3, UDT needs 4, SGDL needs 5 hyperparameters. EARD uses only α and β with a smooth, unimodal performance landscape.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- METHOD -->
+  <section>
+    <h2>EARD Framework</h2>
+    <div class="framework">
+      <div class="fw-step">
+        <div class="fw-icon">📊</div>
+        <div class="fw-name">Collect Loss</div>
+        <div class="fw-desc">Gather per-instance losses each epoch</div>
+      </div>
+      <div class="fw-step">
+        <div class="fw-icon">👤</div>
+        <div class="fw-name">Entity Avg Loss</div>
+        <div class="fw-desc">Average loss per user & item</div>
+      </div>
+      <div class="fw-step">
+        <div class="fw-icon">⚖️</div>
+        <div class="fw-name">Reliability Score</div>
+        <div class="fw-desc">Linear map via rank → [α, β]</div>
+      </div>
+      <div class="fw-step">
+        <div class="fw-icon">📐</div>
+        <div class="fw-name">Base Weight (ECDF)</div>
+        <div class="fw-desc">Non-parametric interaction weight</div>
+      </div>
+      <div class="fw-step">
+        <div class="fw-icon">✖️</div>
+        <div class="fw-name">Weight Fusion</div>
+        <div class="fw-desc">w = w_base · w_user · w_item</div>
+      </div>
+    </div>
+    <br>
+    <div class="design-row">
+      <div class="dcard">
+        <h3>Why ECDF for Base Weights?</h3>
+        <p>Loss distributions are often non-standard and long-tailed. ECDF is distribution-agnostic, robust to outliers, and produces smooth weights in [0,1] without hard thresholds.</p>
+      </div>
+      <div class="dcard">
+        <h3>Why Average Loss as Reliability Proxy?</h3>
+        <p>Noisy interactions tend to produce higher training losses. Entities with high average loss across interactions are less reliable — a signal that is both simple and empirically validated.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section>
+    <h2>Main Results</h2>
+    <p>EARD consistently outperforms all baselines across datasets and backbone models:</p>
+    <div class="results-grid">
+      <div class="rcard">
+        <div class="rdataset">NeuMF · Yelp</div>
+        <div class="rscore">+27%</div>
+        <div class="rgain">NDCG@50 gain</div>
+        <div class="rmetric">vs. vanilla baseline</div>
+      </div>
+      <div class="rcard">
+        <div class="rdataset">CDAE · Amazon-Book</div>
+        <div class="rscore">+20%</div>
+        <div class="rgain">NDCG@50 gain</div>
+        <div class="rmetric">vs. vanilla baseline</div>
+      </div>
+      <div class="rcard">
+        <div class="rdataset">CDAE · Yelp</div>
+        <div class="rscore">+19%</div>
+        <div class="rgain">NDCG@50 gain</div>
+        <div class="rmetric">vs. vanilla baseline</div>
+      </div>
+    </div>
+    <p class="results-note">Results averaged over 5 runs. EARD outperforms UDT, DeCA, BOD, PLD and other SOTA baselines across GMF, NeuMF, and CDAE backbones on Yelp, Amazon-Book, and ML-1M datasets.</p>
+  </section>
+
+  <!-- EFFICIENCY -->
+  <section>
+    <h2>Efficiency Comparison</h2>
+    <p>EARD adds only 5–15% memory overhead vs vanilla, while DeCA and BOD require up to 3× more:</p>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+      <table class="eff-table">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Peak Mem (GMF·ML-1M)</th>
+            <th>Complexity</th>
+            <th>#Hyperparams</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Vanilla</td><td>528 MB</td><td class="tag-good">O(|D|)</td><td>—</td></tr>
+          <tr><td>DeCA</td><td>1510 MB <span style="color:var(--accent2);font-size:12px;font-weight:600">(×2.9)</span></td><td class="tag-bad">meta-learning</td><td>3</td></tr>
+          <tr><td>BOD</td><td>1140 MB <span style="color:var(--accent2);font-size:12px;font-weight:600">(×2.2)</span></td><td class="tag-bad">bi-level</td><td>—</td></tr>
+          <tr class="ours"><td><strong>EARD (Ours)</strong></td><td><strong>559 MB</strong> <span style="color:var(--green);font-size:12px;font-weight:600">(×1.06)</span></td><td class="tag-good">O(|D| log|D|)</td><td><strong>2</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- CITATION -->
+  <section>
+    <h2>Citation</h2>
+    <div class="bib-box">
+      <button class="copy-btn" onclick="copyBib()">Copy</button>
+      <pre id="bib">@inproceedings{liu2026eard,
+  title     = {From Entity Reliability to Clean Feedback:
+               An Entity-Aware Denoising Framework Beyond
+               Interaction-Level Signals},
+  author    = {Liu, Ze and Wang, Xianquan and Liu, Shuochen
+               and Ma, Jie and Xu, Huibo and Han, Yupeng
+               and Zhang, Kai and Zhou, Jun},
+  booktitle = {Proceedings of the ACM Web Conference 2026
+               (WWW '26)},
+  doi       = {10.1145/3774904.3792128},
+  year      = {2026}
+}</pre>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Ze Liu et al. &nbsp;·&nbsp; USTC &amp; ZJU &nbsp;·&nbsp; <a href="https://doi.org/10.1145/3774904.3792128">WWW 2026</a> &nbsp;·&nbsp; Code: <a href="https://github.com/Fammia/EARD">github.com/Fammia/EARD</a>
+</footer>
+
+<script>
+function copyBib() {
+  const text = document.getElementById('bib').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+</script>
+</body>
+</html>
